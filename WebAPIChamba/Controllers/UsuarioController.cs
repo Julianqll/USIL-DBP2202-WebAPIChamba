@@ -4,7 +4,6 @@ using WebAPIChamba.Models;
 
 namespace WebAPIChamba.Controllers
 {
-    [Route("Api/[Controller]")]
     public class UsuarioController : Controller
     {
         private readonly sql10579654Context Context;
@@ -14,27 +13,23 @@ namespace WebAPIChamba.Controllers
             Context = context;
         }
 
-        [HttpGet]
-        public IActionResult PerfilUsuario()
-        {
-            String? sesion = HttpContext.Session.GetString("usuario");
-            var sesionJson = JsonConvert.DeserializeObject<Usuario>(sesion);
-            return Ok(sesionJson);
-        }
 
 
-        [HttpPost]
-        public IActionResult RegistroUsuarioPost(Usuario usuario)
+        [HttpPost, Route("/api/usuario/registro/usuarios")]
+        public IActionResult RegistroUsuarioPost([FromBody] Usuario usuario)
         {
+            String info = JsonConvert.SerializeObject(usuario);
             Context.Usuarios.Add(usuario);
             Context.SaveChanges();
-            Login login = new Login();
-            login.Correo = usuario.CorreoUsuario;
-            login.Contraseña = Request.Form["contrasenaField"];
-            login.Rol = "U";
+            return Ok(usuario);
+        }
+
+        [HttpPost, Route("/api/usuario/registro/logins")]
+        public IActionResult RegistroUsuarioLoginsPost([FromBody] Login login)
+        {
             Context.Logins.Add(login);
             Context.SaveChanges();
-            return Redirect("/login");
+            return Ok();
         }
 
         [HttpGet, Route("/buscarPuestos")]

@@ -32,7 +32,7 @@ namespace WebAPIChamba.Controllers
                     return Ok("E");
                 }
             }
-            return Ok("Andres puto");
+            return Ok("Ok");
         }
 
 
